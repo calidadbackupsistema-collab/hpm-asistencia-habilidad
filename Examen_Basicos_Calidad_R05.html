@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>Examen · Básicos de la Calidad R02 · Hyundai Polytech México</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light;--navy:#0B2D50;--navy-2:#0F2044;--blue:#0E75BC;--cyan:#42C6FF;--ink:#10263B;--ink-soft:#5A6C7E;--ink-faint:#8797A8;--line:#D7E1EB;--line-strong:#C3D2E0;--surface:#fff;--surface-alt:#F3F7FB;--accent-soft:#E6F2FA;--ok:#16834E;--ok-bg:#E8F6EF;--warn:#C87F0A;--warn-bg:#FCF3E3;--bad:#D7263D;--bad-bg:#FDECEE;--radius:14px;
+--sans:'IBM Plex Sans','Malgun Gothic','Apple SD Gothic Neo','Noto Sans KR',system-ui,sans-serif;--mono:'IBM Plex Mono','Malgun Gothic',ui-monospace,monospace}
+*{box-sizing:border-box}
+html,body{margin:0}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{background:#fff;color:var(--ink);font:15px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid rgba(66,198,255,.6);outline-offset:2px}
+[hidden]{display:none!important}
+.wrap{max-width:980px;margin:0 auto;padding:18px}
+
+/* Header estándar HPM */
+.hpm-header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;background:linear-gradient(120deg,#0B2D50,#0E75BC 65%,#128A9E);border-radius:20px;padding:16px 22px;color:#fff;box-shadow:0 14px 34px #0b2d5030;border-bottom:4px solid var(--bad)}
+.brand{display:flex;align-items:center;gap:14px;min-width:0}
+.brand img{height:48px;background:#fff;border-radius:10px;padding:6px 10px;flex:none}
+.brand h1{margin:0;font-size:20px;line-height:1.2}
+.brand p{margin:2px 0 0;font-size:12.5px;opacity:.85}
+.hdr-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.chip{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);border-radius:20px;padding:5px 12px;font:600 11.5px var(--mono);color:#fff}
+.hbtn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:10px;padding:7px 12px;font-size:13px;font-weight:600;cursor:pointer}
+.hbtn:hover{background:rgba(255,255,255,.22)}
+.lang{display:inline-flex;border:1px solid rgba(255,255,255,.4);border-radius:10px;overflow:hidden}
+.lang button{background:transparent;border:0;color:#fff;padding:7px 11px;font-weight:600;font-size:13px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:#fff;color:var(--navy)}
+
+/* Tarjetas */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:0 6px 18px #0b2d500d}
+.grid2{display:grid;grid-template-columns:1.25fr 1fr;gap:18px;margin-top:18px}
+@media (max-width:760px){.grid2{grid-template-columns:1fr}}
+h2{margin:0 0 4px;font-size:19px;color:var(--navy)}
+.sub{margin:0 0 18px;color:var(--ink-soft);font-size:13.5px}
+label.f{display:block;font-size:12.5px;font-weight:600;color:var(--ink-soft);margin:12px 0 5px}
+.in{width:100%;border:1px solid var(--line-strong);border-radius:10px;padding:10px 12px;background:#fff;font-size:15px}
+.in:focus{border-color:var(--blue);outline:none;box-shadow:0 0 0 3px #0e75bc22}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.seg{display:flex;gap:8px}
+.seg button{flex:1;border:1px solid var(--line-strong);background:#fff;border-radius:10px;padding:10px;font-weight:600;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--blue);color:var(--navy)}
+.err{color:var(--bad);font-size:13px;margin-top:12px;min-height:1em}
+.btn{border:0;border-radius:11px;padding:12px 20px;font-weight:700;font-size:15px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;justify-content:center}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-primary:hover{background:#0b65a3}
+.btn-ghost{background:#fff;color:var(--navy);border:1px solid var(--line-strong)}
+.btn-ghost:hover{background:var(--surface-alt)}
+.btn-danger{background:var(--bad);color:#fff}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.full{width:100%;margin-top:18px}
+
+.rules{list-style:none;padding:0;margin:0}
+.rules li{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.rules li:last-child{border-bottom:0}
+.rules .k{font:700 20px var(--mono);color:var(--blue);min-width:56px}
+.rules .v{font-size:13.5px;color:var(--ink-soft)}
+.rules .v b{color:var(--ink);display:block;font-size:14px}
+.topics{margin-top:14px;display:flex;flex-wrap:wrap;gap:6px}
+.pill{display:inline-block;border-radius:20px;padding:3px 10px;font-size:12px;font-weight:600;background:var(--accent-soft);color:var(--navy)}
+.pill.nc{background:var(--bad-bg);color:#9B1729}
+
+/* Examen */
+.examtop{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:18px 0 10px}
+.who{font-weight:600;color:var(--navy)}
+.who small{display:block;font-weight:500;color:var(--ink-soft);font-size:12.5px}
+.counter{font:600 14px var(--mono);color:var(--ink-soft)}
+.dots{display:grid;grid-template-columns:repeat(20,1fr);gap:4px;margin-bottom:16px}
+.dot{height:30px;border-radius:7px;border:1px solid var(--line-strong);background:#fff;font:600 11px var(--mono);color:var(--ink-faint);cursor:pointer;padding:0}
+.dot.ans{background:var(--blue);border-color:var(--blue);color:#fff}
+.dot.cur{outline:3px solid var(--cyan);outline-offset:1px}
+@media (max-width:600px){.dots{grid-template-columns:repeat(10,1fr)}}
+.qmeta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.ref{font:600 12px var(--mono);color:var(--ink-faint)}
+.qtext{font-size:21px;line-height:1.4;font-weight:600;margin:0 0 20px;color:var(--ink);max-width:70ch}
+.opts{display:grid;gap:10px}
+.opt{display:flex;gap:14px;align-items:flex-start;text-align:left;border:1.5px solid var(--line-strong);background:#fff;border-radius:12px;padding:14px 16px;cursor:pointer;font-size:15.5px;line-height:1.45;transition:border-color .12s,background .12s}
+.opt:hover{border-color:var(--blue)}
+.opt .lt{flex:none;width:30px;height:30px;border-radius:50%;border:1.5px solid var(--line-strong);display:grid;place-items:center;font:700 13px var(--mono);color:var(--ink-soft)}
+.opt[aria-checked="true"]{border-color:var(--blue);background:var(--accent-soft)}
+.opt[aria-checked="true"] .lt{background:var(--blue);border-color:var(--blue);color:#fff}
+.qnav{display:flex;justify-content:space-between;gap:10px;margin-top:22px}
+
+/* Resultados */
+.sync-line{font-size:12.5px;margin-top:10px;color:var(--ink-soft)}
+.sync-line.ok{color:#1E8E5A}.sync-line.warn{color:#B7791F}
+.res-hero{display:grid;grid-template-columns:auto 1fr;gap:26px;align-items:center;background:var(--navy-2);color:#fff;border-radius:18px;padding:24px 26px;margin-top:18px}
+@media (max-width:640px){.res-hero{grid-template-columns:1fr}}
+.ring{width:150px;height:150px;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .num{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
+.ring .num b{font:700 34px var(--mono);display:block;line-height:1}
+.ring .num span{font-size:12px;opacity:.8}
+.verdict{display:inline-block;border-radius:20px;padding:5px 14px;font-weight:700;font-size:14px;margin-bottom:10px}
+.verdict.ok{background:var(--ok);color:#fff}
+.verdict.bad{background:var(--bad);color:#fff}
+.res-hero h2{color:#fff;font-size:22px;margin-bottom:6px}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px 18px;margin-top:12px;font-size:13px}
+.kv div span{display:block;opacity:.7;font-size:11.5px}
+.kv div b{font-weight:600}
+.cats{display:grid;gap:12px;margin-top:6px}
+.cat{display:grid;grid-template-columns:minmax(150px,220px) 1fr 54px;gap:12px;align-items:center;font-size:14px}
+.bar{height:10px;background:var(--surface-alt);border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+.bar i{display:block;height:100%;background:var(--blue)}
+.bar i.low{background:var(--bad)}
+.cat .pc{font:600 13px var(--mono);text-align:right}
+.rev-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.rev{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px;break-inside:avoid}
+.rev.okq{border-left-width:1px}
+.rev .rq{font-weight:600;margin:6px 0 8px}
+.ans-line{font-size:14px;padding:6px 10px;border-radius:8px;margin-top:4px}
+.ans-line.ok{background:var(--ok-bg);color:#0F5E38}
+.ans-line.bad{background:var(--bad-bg);color:#9B1729}
+.exp{font-size:13.5px;color:var(--ink-soft);margin-top:8px}
+.mark{font:700 12px var(--mono);border-radius:6px;padding:2px 8px}
+.mark.ok{background:var(--ok-bg);color:var(--ok)}
+.mark.bad{background:var(--bad-bg);color:var(--bad)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.sign{display:none}
+.certificate-heading,.certificate-sign{display:none}
+.pdf-help{margin:10px 0;color:var(--ink-soft);font-size:13px}
+@media print{
+  body.certificate-print #screen-result > .card{display:none!important}
+  body.certificate-print .certificate-heading{display:block;text-align:center;margin:32px 0 22px}
+  body.certificate-print .certificate-heading h2{font-size:28px}
+  body.certificate-print .certificate-heading p{font-size:16px}
+  body.certificate-print .res-hero{background:#fff;color:var(--ink);border:2px solid var(--navy);margin-top:24px;grid-template-columns:auto 1fr;break-inside:avoid}
+  body.certificate-print .res-hero h2{color:var(--navy)}
+  body.certificate-print .kv div span,body.certificate-print .ring .num span{opacity:1}
+  body.certificate-print .certificate-sign{display:grid;margin-top:80px}
+}
+
+/* Historial */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:680px}
+th{background:var(--navy);color:#fff;text-align:left;padding:9px 12px;font-weight:600;font-size:12.5px}
+td{padding:9px 12px;border-top:1px solid var(--line)}
+tr:nth-child(even) td{background:var(--surface-alt)}
+.empty{padding:30px;text-align:center;color:var(--ink-soft)}
+
+/* Diálogo */
+.modal{position:fixed;inset:0;background:#0b2d5066;display:grid;place-items:center;padding:20px;z-index:50}
+.modal .card{max-width:440px;width:100%}
+.modal p{color:var(--ink-soft);margin:6px 0 0}
+
+.foot{margin:26px 0 8px;text-align:center;color:var(--ink-faint);font-size:12px}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+@media print{
+  @page{size:letter;margin:12mm}
+  body{font-size:11.5px}
+  .wrap{max-width:none;padding:0}
+  .hdr-actions,.actions,.rev-head .seg,#screen-history,.foot,.no-print{display:none!important}
+  .hpm-header{box-shadow:none;-webkit-print-color-adjust:exact;print-color-adjust:exact;padding:10px 16px}
+  .res-hero,.verdict,.bar i,th,.ans-line,.mark{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .res-hero{padding:14px 18px}
+  .ring{width:120px;height:120px}
+  .ring .num b{font-size:24px}
+  .card{box-shadow:none;padding:14px}
+  .rev{padding:8px 12px;margin-bottom:6px}
+  .rev[data-hide]{display:block!important}
+  .sign{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:36px;break-inside:avoid}
+  .sign div{border-top:1px solid var(--ink);padding-top:6px;text-align:center;font-size:11px}
+}
+</style>
+<!-- Envío de resultados al sistema de Calidad (Firebase hpm-calidad, mismo proyecto que index.html) -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, doc, setDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  const firebaseConfig = {
+    apiKey: "AIzaSyAdEHVcfHgbGuXUetaGTHTUrANanVizeh4",
+    authDomain: "hpm-calidad.firebaseapp.com",
+    projectId: "hpm-calidad",
+    storageBucket: "hpm-calidad.firebasestorage.app",
+    messagingSenderId: "323722487294",
+    appId: "1:323722487294:web:46b3bdc363018c05870caf"
+  };
+  try{
+    const db = getFirestore(initializeApp(firebaseConfig));
+    window.__fbExam = { db, doc, setDoc, arrayUnion };
+  }catch(e){ console.error('Firebase no disponible', e); }
+  window.dispatchEvent(new Event('fbexam-ready'));
+</script>
+</head>
+<body>
+<div class="wrap">
+  <header class="hpm-header">
+    <div class="brand">
+      <img src="data:image/png;base64,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" alt="Hyundai Polytech">
+      <div>
+        <h1 data-i="appTitle"></h1>
+        <p data-i="appSub"></p>
+      </div>
+    </div>
+    <div class="hdr-actions">
+      <span class="chip">R02 · IATF 16949 §7.2 / §7.3</span>
+      <button class="hbtn" id="btnHistory" data-i="history"></button>
+      <div class="lang" role="group" aria-label="Idioma / 언어 / Language">
+        <button data-lang="es" aria-pressed="true">ES</button>
+        <button data-lang="ko" aria-pressed="false">한국어</button>
+        <button data-lang="en" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Registro -->
+  <section id="screen-start">
+    <div class="grid2">
+      <div class="card">
+        <h2 data-i="regTitle"></h2>
+        <p class="sub" data-i="regSub"></p>
+        <label class="f" for="fName" data-i="fName"></label>
+        <input class="in" id="fName" autocomplete="off">
+        <div class="row2">
+          <div><label class="f" for="fEmp" data-i="fEmp"></label><input class="in" id="fEmp" inputmode="numeric" autocomplete="off"></div>
+          <div><label class="f" for="fArea" data-i="fArea"></label><select class="in" id="fArea"></select></div>
+        </div>
+        <label class="f" data-i="fShift"></label>
+        <div class="seg" id="fShift">
+          <button type="button" data-v="A" aria-pressed="false">A</button>
+          <button type="button" data-v="B" aria-pressed="false">B</button>
+          <button type="button" data-v="Admin" aria-pressed="false" data-i="shiftAdmin"></button>
+        </div>
+        <label class="f" for="fInst" data-i="fInst"></label>
+        <input class="in" id="fInst" autocomplete="off">
+        <div class="err" id="regErr" role="alert"></div>
+        <button class="btn btn-primary full" id="btnStart" data-i="start"></button>
+      </div>
+      <div class="card">
+        <h2 data-i="beforeTitle"></h2>
+        <ul class="rules">
+          <li><span class="k">20</span><span class="v"><b data-i="r1a"></b><span data-i="r1b"></span></span></li>
+          <li><span class="k">80%</span><span class="v"><b data-i="r2a"></b><span data-i="r2b"></span></span></li>
+          <li><span class="k">A–D</span><span class="v"><b data-i="r3a"></b><span data-i="r3b"></span></span></li>
+        </ul>
+        <div class="topics" id="topicPills"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Examen -->
+  <section id="screen-exam" hidden>
+    <div class="examtop">
+      <div class="who" id="whoLine"></div>
+      <div class="counter" id="counter"></div>
+    </div>
+    <div class="dots" id="dots"></div>
+    <div class="card">
+      <div class="qmeta" id="qmeta"></div>
+      <p class="qtext" id="qtext"></p>
+      <div class="opts" id="opts" role="radiogroup"></div>
+      <div class="qnav">
+        <button class="btn btn-ghost" id="btnPrev" data-i="prev"></button>
+        <button class="btn btn-primary" id="btnNext"></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Resultados -->
+  <section id="screen-result" hidden>
+    <div class="certificate-heading"><h2 data-i="certTitle"></h2><p data-i="certCourse"></p><p data-i="certDescription"></p></div>
+    <div class="res-hero">
+      <div class="ring">
+        <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="12"/><circle id="ringArc" cx="60" cy="60" r="52" fill="none" stroke="#42C6FF" stroke-width="12" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7"/></svg>
+        <div class="num"><div><b id="rScore"></b><span id="rPct"></span></div></div>
+      </div>
+      <div>
+        <span class="verdict" id="rVerdict"></span>
+        <h2 id="rName"></h2>
+        <div class="kv" id="rKv"></div>
+        <div class="sync-line" id="rSync" role="status"></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:18px">
+      <h2 data-i="byTopic"></h2>
+      <p class="sub" data-i="byTopicSub"></p>
+      <div class="cats" id="cats"></div>
+    </div>
+    <div class="card" style="margin-top:18px">
+      <div class="rev-head">
+        <h2 data-i="review" style="margin:0"></h2>
+        <div class="seg" id="revFilter" style="min-width:260px">
+          <button type="button" data-v="all" aria-pressed="true" data-i="fAll"></button>
+          <button type="button" data-v="bad" aria-pressed="false" data-i="fBad"></button>
+        </div>
+      </div>
+      <div id="revList"></div>
+      <div class="sign">
+        <div data-i="signP"></div>
+        <div data-i="signI"></div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-primary" id="btnCertificate" data-i="printCertificate" type="button">Imprimir Certificado</button>
+      <button class="btn btn-ghost" id="btnPrint" data-i="print"></button>
+      <button class="btn btn-ghost" id="btnNew" data-i="newExam"></button>
+    </div>
+    <p class="pdf-help no-print" data-i="pdfHelp"></p>
+    <div class="sign certificate-sign"><div data-i="signP"></div><div data-i="signI"></div></div>
+  </section>
+
+  <!-- Historial -->
+  <section id="screen-history" hidden>
+    <div class="card" style="margin-top:18px">
+      <div class="rev-head">
+        <div><h2 data-i="history"></h2><p class="sub" style="margin:0" data-i="histSub"></p></div>
+        <div class="actions" style="margin:0">
+          <button class="btn btn-ghost" id="btnCsv" data-i="csv"></button>
+          <button class="btn btn-ghost" id="btnClear" data-i="clear"></button>
+          <button class="btn btn-primary" id="btnBack" data-i="back"></button>
+        </div>
+      </div>
+      <div class="tbl-wrap" id="histTbl"></div>
+    </div>
+  </section>
+
+  <p class="foot" data-i="foot"></p>
+</div>
+
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <div class="card">
+    <h2 id="mTitle"></h2>
+    <p id="mText"></p>
+    <div class="actions" style="justify-content:flex-end">
+      <button class="btn btn-ghost" id="mCancel"></button>
+      <button class="btn btn-primary" id="mOk"></button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- Textos de interfaz ---------- */
+const UI={
+es:{syncOk:"Resultado enviado al sistema de Calidad (Matriz de Habilidad).",syncWait:"Enviando resultado al sistema de Calidad…",syncFail:"Sin conexión: el resultado quedó guardado en este equipo y se enviará automáticamente al reconectar.",appTitle:"Examen · Básicos de la Calidad",appSub:"Departamento de Calidad · Hyundai Polytech México",history:"Resultados registrados",
+regTitle:"Datos del participante",regSub:"Llena tus datos antes de iniciar. Aparecerán en la constancia del examen.",
+fName:"Nombre completo",fEmp:"No. de empleado",fArea:"Área",fShift:"Turno",shiftAdmin:"Admin.",fInst:"Instructor",
+start:"Iniciar examen",beforeTitle:"Antes de empezar",
+r1a:"Preguntas de opción múltiple",r1b:"Basadas en el entrenamiento Básicos de la Calidad R02.",
+r2a:"Calificación mínima aprobatoria",r2b:"Necesitas 16 respuestas correctas de 20.",
+r3a:"Una sola respuesta correcta",r3b:"Puedes regresar y cambiar tus respuestas antes de terminar.",
+errName:"Escribe tu nombre completo.",errEmp:"Escribe tu número de empleado.",errArea:"Selecciona tu área.",errShift:"Selecciona tu turno.",
+q:"Pregunta",of:"de",prev:"Anterior",next:"Siguiente",finish:"Terminar examen",slide:"Lámina",
+mUnTitle:"Tienes preguntas sin contestar",mUnText:n=>`Faltan ${n} pregunta(s). Las preguntas sin respuesta cuentan como incorrectas.`,mUnOk:"Terminar de todos modos",mUnCancel:"Regresar al examen",
+mFinTitle:"¿Terminar el examen?",mFinText:"Ya no podrás cambiar tus respuestas.",mFinOk:"Terminar examen",mFinCancel:"Revisar respuestas",
+pass:"APROBADO",fail:"NO APROBADO",correct:"correctas",kEmp:"No. empleado",kArea:"Área",kShift:"Turno",kInst:"Instructor",kDate:"Fecha",kTime:"Duración",
+byTopic:"Resultado por tema",byTopicSub:"Los temas por debajo del 80% necesitan refuerzo en piso.",
+review:"Revisión de respuestas",fAll:"Todas",fBad:"Solo incorrectas",yourAns:"Tu respuesta",rightAns:"Respuesta correcta",noAns:"Sin respuesta",ok:"Correcta",bad:"Incorrecta",
+signP:"Firma del participante",signI:"Firma del instructor",print:"Imprimir constancia",newExam:"Nuevo examen",
+histSub:"Exámenes terminados en este equipo.",csv:"Descargar CSV",clear:"Borrar registros",back:"Regresar",
+histEmpty:"Todavía no hay exámenes terminados en este equipo.",
+hDate:"Fecha",hName:"Nombre",hEmp:"No. emp.",hArea:"Área",hShift:"Turno",hScore:"Aciertos",hRes:"Resultado",
+mClrTitle:"¿Borrar todos los registros?",mClrText:"Se eliminarán los resultados guardados en este equipo. Descarga el CSV antes si los necesitas.",mClrOk:"Borrar registros",mClrCancel:"Cancelar",
+mNewTitle:"¿Salir del examen en curso?",mNewText:"Se perderán las respuestas de este intento.",mNewOk:"Salir",mNewCancel:"Continuar examen",
+foot:"Ref. ENTRENAMIENTO_BASICOS_DE_LA_CALIDAD_R02 · Evidencia de competencia y toma de conciencia (IATF 16949 §7.2, §7.3)",
+selArea:"Selecciona…",min:"min"},
+ko:{syncOk:"결과가 품질 시스템(기술 매트릭스)으로 전송되었습니다.",syncWait:"품질 시스템으로 결과 전송 중…",syncFail:"연결 없음: 결과가 이 기기에 저장되었으며 다시 연결되면 자동으로 전송됩니다.",appTitle:"시험 · 품질 기초 교육",appSub:"품질부 · 현대폴리텍 멕시코",history:"시험 결과 기록",
+regTitle:"응시자 정보",regSub:"시작 전에 정보를 입력하세요. 시험 확인서에 표시됩니다.",
+fName:"성명",fEmp:"사번",fArea:"부서 / 공정",fShift:"근무조",shiftAdmin:"사무직",fInst:"교육 강사",
+start:"시험 시작",beforeTitle:"시작 전 안내",
+r1a:"객관식 문항",r1b:"품질 기초 교육 R02 내용을 기반으로 합니다.",
+r2a:"최소 합격 점수",r2b:"20문항 중 16문항 이상 정답이어야 합니다.",
+r3a:"정답은 하나입니다",r3b:"시험 종료 전에는 이전 문항으로 돌아가 답을 변경할 수 있습니다.",
+errName:"성명을 입력하세요.",errEmp:"사번을 입력하세요.",errArea:"부서를 선택하세요.",errShift:"근무조를 선택하세요.",
+q:"문항",of:"/",prev:"이전",next:"다음",finish:"시험 종료",slide:"슬라이드",
+mUnTitle:"답하지 않은 문항이 있습니다",mUnText:n=>`${n}개 문항이 남아 있습니다. 미응답 문항은 오답으로 처리됩니다.`,mUnOk:"그래도 종료",mUnCancel:"시험으로 돌아가기",
+mFinTitle:"시험을 종료하시겠습니까?",mFinText:"종료 후에는 답을 변경할 수 없습니다.",mFinOk:"시험 종료",mFinCancel:"답안 검토",
+pass:"합격",fail:"불합격",correct:"정답",kEmp:"사번",kArea:"부서",kShift:"근무조",kInst:"교육 강사",kDate:"일자",kTime:"소요 시간",
+byTopic:"주제별 결과",byTopicSub:"80% 미만인 주제는 현장 보충 교육이 필요합니다.",
+review:"답안 검토",fAll:"전체",fBad:"오답만",yourAns:"선택한 답",rightAns:"정답",noAns:"미응답",ok:"정답",bad:"오답",
+signP:"응시자 서명",signI:"교육 강사 서명",print:"확인서 인쇄",newExam:"새 시험",
+histSub:"이 기기에서 완료된 시험입니다.",csv:"CSV 다운로드",clear:"기록 삭제",back:"돌아가기",
+histEmpty:"이 기기에서 완료된 시험이 아직 없습니다.",
+hDate:"일자",hName:"성명",hEmp:"사번",hArea:"부서",hShift:"근무조",hScore:"정답 수",hRes:"결과",
+mClrTitle:"모든 기록을 삭제하시겠습니까?",mClrText:"이 기기에 저장된 결과가 삭제됩니다. 필요하면 먼저 CSV를 다운로드하세요.",mClrOk:"기록 삭제",mClrCancel:"취소",
+mNewTitle:"진행 중인 시험을 나가시겠습니까?",mNewText:"이번 응시의 답안이 삭제됩니다.",mNewOk:"나가기",mNewCancel:"시험 계속",
+foot:"참조: ENTRENAMIENTO_BASICOS_DE_LA_CALIDAD_R02 · 역량 및 인식 증빙 (IATF 16949 §7.2, §7.3)",
+selArea:"선택…",min:"분"},
+en:{syncOk:"Result sent to the Quality system (Skill Matrix).",syncWait:"Sending result to the Quality system…",syncFail:"No connection: the result was saved on this device and will be sent automatically when back online.",appTitle:"Exam · Quality Basics",appSub:"Quality Department · Hyundai Polytech Mexico",history:"Recorded results",
+regTitle:"Participant information",regSub:"Fill in your information before you start. It will appear on the exam record.",
+fName:"Full name",fEmp:"Employee no.",fArea:"Area",fShift:"Shift",shiftAdmin:"Office",fInst:"Instructor",
+start:"Start exam",beforeTitle:"Before you start",
+r1a:"Multiple-choice questions",r1b:"Based on the Quality Basics training R02.",
+r2a:"Minimum passing score",r2b:"You need 16 correct answers out of 20.",
+r3a:"Only one correct answer",r3b:"You can go back and change your answers before finishing.",
+errName:"Enter your full name.",errEmp:"Enter your employee number.",errArea:"Select your area.",errShift:"Select your shift.",
+q:"Question",of:"of",prev:"Previous",next:"Next",finish:"Finish exam",slide:"Slide",
+mUnTitle:"You have unanswered questions",mUnText:n=>`${n} question(s) left. Unanswered questions count as incorrect.`,mUnOk:"Finish anyway",mUnCancel:"Back to exam",
+mFinTitle:"Finish the exam?",mFinText:"You won't be able to change your answers.",mFinOk:"Finish exam",mFinCancel:"Review answers",
+pass:"PASSED",fail:"NOT PASSED",correct:"correct",kEmp:"Employee no.",kArea:"Area",kShift:"Shift",kInst:"Instructor",kDate:"Date",kTime:"Duration",
+byTopic:"Result by topic",byTopicSub:"Topics below 80% need reinforcement on the floor.",
+review:"Answer review",fAll:"All",fBad:"Incorrect only",yourAns:"Your answer",rightAns:"Correct answer",noAns:"No answer",ok:"Correct",bad:"Incorrect",
+signP:"Participant signature",signI:"Instructor signature",print:"Print record",newExam:"New exam",
+histSub:"Exams completed on this device.",csv:"Download CSV",clear:"Delete records",back:"Back",
+histEmpty:"No exams have been completed on this device yet.",
+hDate:"Date",hName:"Name",hEmp:"Emp. no.",hArea:"Area",hShift:"Shift",hScore:"Score",hRes:"Result",
+mClrTitle:"Delete all records?",mClrText:"Results saved on this device will be deleted. Download the CSV first if you need them.",mClrOk:"Delete records",mClrCancel:"Cancel",
+mNewTitle:"Leave the exam in progress?",mNewText:"The answers from this attempt will be lost.",mNewOk:"Leave",mNewCancel:"Continue exam",
+foot:"Ref. ENTRENAMIENTO_BASICOS_DE_LA_CALIDAD_R02 · Evidence of competence and awareness (IATF 16949 §7.2, §7.3)",
+selArea:"Select…",min:"min"}};
+
+const AREAS=[["Inyección","사출","Injection"],["Ensamble","조립","Assembly"],["Rubber","고무 (Rubber)","Rubber"],["Autoblow","블로우 성형 (Autoblow)","Autoblow"],["CNC","CNC","CNC"],["GP12 / Inspección","GP12 / 검사","GP12 / Inspection"],["Calidad","품질","Quality"],["Almacén","창고","Warehouse"],["Mantenimiento","보전","Maintenance"],["Otra","기타","Other"]];
+const LI={es:0,ko:1,en:2};
+
+const CATS={
+ fund:{es:"Fundamentos de calidad",ko:"품질 기본",en:"Quality fundamentals"},
+ pnc:{es:"Producto no conforme",ko:"부적합품 관리",en:"Nonconforming product"},
+ prev:{es:"Prevención y trazabilidad",ko:"오류 예방 및 추적성",en:"Error proofing & traceability"},
+ insp:{es:"GP12 e inspección",ko:"GP12 및 검사",en:"GP12 & inspection"},
+ seg:{es:"Seguridad",ko:"안전",en:"Safety"}};
+
+/* ---------- Banco de preguntas (opción [0] = correcta; se barajan al iniciar) ---------- */
+const Q=[
+{c:"fund",s:2,q:{es:"La mentalidad de calidad de HPM se basa en tres compromisos. ¿Cuáles son?",ko:"HPM의 품질 마인드는 세 가지 약속을 기반으로 합니다. 무엇입니까?"},
+ o:[{es:"Yo recibo, yo produzco, yo entrego (con calidad)",ko:"나는 받는다, 나는 생산한다, 나는 납품한다 (품질 있게)"},
+    {es:"Yo inspecciono, yo reporto, yo descanso",ko:"나는 검사한다, 나는 보고한다, 나는 쉰다"},
+    {es:"Yo compro, yo vendo, yo cobro",ko:"나는 구매한다, 나는 판매한다, 나는 수금한다"},
+    {es:"Yo produzco, el inspector revisa, el cliente decide",ko:"나는 생산하고, 검사자가 확인하고, 고객이 결정한다"}],
+ e:{es:"Cada persona es responsable de la calidad de lo que recibe, de lo que produce y de lo que entrega al siguiente proceso.",ko:"각자는 받는 것, 생산하는 것, 다음 공정에 넘기는 것의 품질에 책임이 있습니다."}},
+{c:"fund",s:3,q:{es:"En las 5S, ¿qué significa «Ordenar»?",ko:"5S에서 '정돈(Ordenar)'은 무엇을 의미합니까?"},
+ o:[{es:"Cada cosa en su lugar: organizar lo que sí se necesita de forma lógica y accesible",ko:"모든 것을 제자리에: 필요한 것을 논리적이고 쉽게 찾을 수 있게 정리"},
+    {es:"Quitar del área todo lo que no se necesita",ko:"필요 없는 것을 구역에서 제거"},
+    {es:"Eliminar el polvo, la suciedad y las fuentes de contaminación",ko:"먼지, 오염 및 오염원을 제거"},
+    {es:"Evaluar, corregir y mejorar continuamente",ko:"지속적으로 평가, 시정, 개선"}],
+ e:{es:"Separar = quitar lo innecesario; Ordenar = cada cosa en su lugar; Limpiar = eliminar suciedad; Estandarizar = reglas; Sostener = hábito.",ko:"정리=불필요한 것 제거, 정돈=제자리, 청소=오염 제거, 표준화=규칙, 유지=습관화."}},
+{c:"fund",s:5,q:{es:"¿Qué es una NCR?",ko:"NCR이란 무엇입니까?"},
+ o:[{es:"Una no conformidad reportada por clientes, o un reclamo de HPM a sus proveedores",ko:"고객이 제기한 부적합 또는 HPM이 협력사에 제기한 클레임"},
+    {es:"Un nuevo código de referencia para el número de parte",ko:"품번의 새로운 참조 코드"},
+    {es:"Un problema interno de planta que no sale del área",ko:"구역 밖으로 나가지 않는 공장 내부 문제"},
+    {es:"La especificación de la pieza establecida en el dibujo",ko:"도면에 규정된 부품 사양"}],
+ e:{es:"Un problema interno de planta es un ISSUE; la especificación del dibujo es la SPEC.",ko:"공장 내부 문제는 ISSUE, 도면 사양은 SPEC입니다."}},
+{c:"fund",s:5,q:{es:"Una característica crítica (CC) está relacionada con…",ko:"중요 특성(CC)은 무엇과 관련됩니까?"},
+ o:[{es:"La seguridad, la funcionalidad o el ensamble de la pieza",ko:"부품의 안전, 기능 또는 조립"},
+    {es:"Solo el color y la apariencia",ko:"색상과 외관만"},
+    {es:"El costo y el precio de venta",ko:"원가와 판매 가격"},
+    {es:"La cantidad de piezas por caja",ko:"박스당 부품 수량"}],
+ e:{es:"CC = característica crítica. Un error en ella puede afectar la seguridad, la función o el ensamble con el cliente.",ko:"CC의 불량은 고객의 안전, 기능 또는 조립에 영향을 줄 수 있습니다."}},
+{c:"fund",s:6,q:{es:"Un gage Go / No Go solo indica si la pieza pasa o no pasa. ¿De qué tipo es?",ko:"Go / No Go 게이지는 부품의 합격/불합격만 판정합니다. 어떤 유형입니까?"},
+ o:[{es:"De atributos: la característica es conforme o no conforme",ko:"계수형: 특성이 적합 또는 부적합"},
+    {es:"De variables: da una medición real en unidades",ko:"계량형: 단위로 실제 측정값을 제공"},
+    {es:"Un instrumento de medición de altura",ko:"높이 측정기"},
+    {es:"Un dispositivo Poka-Yoke",ko:"포카요케 장치"}],
+ e:{es:"Variables = medición real expresada en una unidad (Vernier, Height gage). Atributos = conforme / no conforme.",ko:"계량형=단위로 표현된 실측값(버니어, 하이트 게이지), 계수형=적합/부적합."}},
+{c:"fund",s:10,q:{es:"Según el Plan de escalación, al acumular 5 no conformidades en inspección, ¿a quién se escala?",ko:"에스컬레이션 계획에 따라 검사에서 부적합이 5건 누적되면 누구에게 보고합니까?"},
+ o:[{es:"Al supervisor de producción / calidad",ko:"생산 / 품질 감독자"},
+    {es:"Solo a los operadores del área",ko:"해당 구역 작업자에게만"},
+    {es:"Al gerente de planta",ko:"공장장"},
+    {es:"No se escala hasta llegar a 10",ko:"10건이 될 때까지 보고하지 않음"}],
+ e:{es:"3 NC → operadores/inspectores; 5 NC → supervisor; 7 NC → gerente de operaciones/calidad; 10 NC → gerente de planta. Un accidente se escala de inmediato.",ko:"3건→작업자/검사자, 5건→감독자, 7건→운영/품질 매니저, 10건→공장장. 사고 1건은 즉시 보고."}},
+{c:"pnc",s:11,q:{es:"¿Para qué se usa la etiqueta ROJA?",ko:"빨간색 라벨은 무엇에 사용합니까?"},
+ o:[{es:"Para señalar el SCRAP (material no conforme)",ko:"스크랩(부적합 자재) 표시"},
+    {es:"Para señalar producto sospechoso",ko:"의심품 표시"},
+    {es:"Para liberar producto previamente rechazado",ko:"이전에 불합격된 제품의 해제"},
+    {es:"Para identificar material en tránsito al cliente",ko:"고객에게 운송 중인 자재 표시"}],
+ e:{es:"Roja = scrap / no conforme; Amarilla = sospechoso; Verde = liberado.",ko:"빨강=스크랩/부적합, 노랑=의심품, 초록=해제."}},
+{c:"pnc",s:11,q:{es:"Encuentras piezas cuya condición todavía no está confirmada. ¿Qué etiqueta les colocas?",ko:"상태가 아직 확인되지 않은 부품을 발견했습니다. 어떤 라벨을 부착합니까?"},
+ o:[{es:"Amarilla: material sospechoso",ko:"노란색: 의심 자재"},
+    {es:"Roja: scrap",ko:"빨간색: 스크랩"},
+    {es:"Verde: material OK",ko:"초록색: 양품 자재"},
+    {es:"Ninguna, se dejan en la línea",ko:"라벨 없이 라인에 둔다"}],
+ e:{es:"El producto sospechoso se identifica con etiqueta amarilla y se retiene hasta su validación.",ko:"의심품은 노란색 라벨로 표시하고 검증될 때까지 보류합니다."}},
+{c:"pnc",s:11,q:{es:"¿Qué indica la etiqueta VERDE «Material OK»?",ko:"초록색 '양품 자재(Material OK)' 라벨은 무엇을 의미합니까?"},
+ o:[{es:"La liberación de producto que previamente fue rechazado",ko:"이전에 불합격된 제품의 해제"},
+    {es:"Que el material va directo a scrap",ko:"자재가 바로 스크랩으로 간다"},
+    {es:"Que el material está en espera de evaluación",ko:"자재가 평가 대기 중이다"},
+    {es:"Que la pieza es un Red Rabbit",ko:"부품이 레드 래빗이다"}],
+ e:{es:"La etiqueta verde documenta que el material retenido ya fue evaluado y liberado.",ko:"초록 라벨은 보류된 자재가 평가 후 해제되었음을 기록합니다."}},
+{c:"pnc",s:12,q:{es:"En la Etiqueta de Producto Sospechoso, ¿quiénes se anotan como responsables?",ko:"의심품 라벨(Etiqueta de Producto Sospechoso)에 책임자로 누구를 기재합니까?"},
+ o:[{es:"Una persona de Proceso y una de Calidad, con nombre y apellido",ko:"공정 담당 1명과 품질 담당 1명 (성명 기재)"},
+    {es:"Solo el cliente",ko:"고객만"},
+    {es:"El gerente de planta, únicamente con su firma",ko:"공장장 (서명만)"},
+    {es:"No se anota responsable",ko:"책임자를 기재하지 않음"}],
+ e:{es:"La etiqueta pide modelo, nombre del producto, motivo, cantidad de piezas, responsables de Proceso y Calidad, y la fecha en que se identificó el material.",ko:"라벨에는 모델, 제품명, 사유, 수량, 공정·품질 책임자, 식별 일자를 기재합니다."}},
+{c:"pnc",s:13,q:{es:"Si un material está en el Área de Cuarentena, significa que…",ko:"자재가 격리 구역에 있다는 것은 무엇을 의미합니까?"},
+ o:[{es:"Queda retenido hasta que exista una decisión autorizada",ko:"승인된 결정이 있을 때까지 보류된다"},
+    {es:"Automáticamente es scrap",ko:"자동으로 스크랩이다"},
+    {es:"Ya está liberado para enviarse",ko:"이미 출하 해제되었다"},
+    {es:"Puede usarse si hay urgencia en la línea",ko:"라인이 급하면 사용할 수 있다"}],
+ e:{es:"Cuarentena no es sinónimo de scrap: el material espera evaluación y una decisión autorizada.",ko:"격리는 스크랩과 같지 않습니다. 자재는 평가와 승인된 결정을 기다립니다."}},
+{c:"pnc",s:13,q:{es:"¿Cómo debe mantenerse el Área de Cuarentena?",ko:"격리 구역은 어떻게 유지해야 합니까?"},
+ o:[{es:"Siempre cerrada y con el material correctamente identificado",ko:"항상 잠겨 있고 자재가 올바르게 식별되어 있어야 한다"},
+    {es:"Abierta para que cualquiera tome material cuando lo necesite",ko:"필요할 때 누구나 가져갈 수 있도록 열어 둔다"},
+    {es:"Cerrada, aunque el material no tenga etiqueta",ko:"라벨이 없어도 잠겨만 있으면 된다"},
+    {es:"Junto al producto bueno para ahorrar espacio",ko:"공간 절약을 위해 양품 옆에 둔다"}],
+ e:{es:"Su función es evitar que material sospechoso o no conforme se mezcle con producto bueno o avance por error.",ko:"의심품·부적합품이 양품과 섞이거나 실수로 다음 공정으로 가는 것을 막기 위함입니다."}},
+{c:"pnc",s:18,q:{es:"¿Qué pasa si enviamos piezas no conformes al cliente?",ko:"부적합품을 고객에게 출하하면 어떻게 됩니까?"},
+ o:[{es:"Queja y multa del cliente, alerta de calidad, contención en HPM y en el cliente, y costos por paro de línea",ko:"고객 클레임과 페널티, 품질 경보, HPM 및 고객사 봉쇄, 라인 정지 비용 발생"},
+    {es:"Nada, el cliente las separa sin costo",ko:"아무 일 없음, 고객이 무상으로 선별"},
+    {es:"Solo se reemplazan las piezas en el siguiente envío",ko:"다음 출하분에서 부품만 교체"},
+    {es:"El cliente nos paga un bono por detectarlas",ko:"고객이 발견 보너스를 지급"}],
+ e:{es:"El costo de un escape incluye multas, contenciones en dos plantas y paro de línea del cliente.",ko:"유출 비용에는 페널티, 양사 봉쇄, 고객 라인 정지가 포함됩니다."}},
+{c:"pnc",s:16,q:{es:"¿Cuándo una desviación del proceso es EXTERNA?",ko:"공정 편차(특채)가 '외부'에 해당하는 경우는 언제입니까?"},
+ o:[{es:"Cuando involucra una característica crítica (seguridad, funcionalidad o ensamble) y requiere aprobación del cliente",ko:"중요 특성(안전, 기능, 조립)과 관련되어 고객 승인이 필요할 때"},
+    {es:"Cuando se controla internamente sin avisar al cliente",ko:"고객 통보 없이 내부에서 관리할 때"},
+    {es:"Cuando el producto sí cumple con la especificación",ko:"제품이 사양을 충족할 때"},
+    {es:"Cuando la decide el operador en su turno",ko:"작업자가 근무 중 결정할 때"}],
+ e:{es:"Interna: se controla en HPM sin notificar al cliente (pero los departamentos deben estar enterados). Externa: requiere aprobación del cliente.",ko:"내부: 고객 통보 없이 HPM 내 관리(관련 부서 공유 필수). 외부: 고객 승인 필요."}},
+{c:"prev",s:14,q:{es:"¿Para qué sirve un Poka-Yoke?",ko:"포카요케의 목적은 무엇입니까?"},
+ o:[{es:"Para prevenir errores, haciendo imposible o muy difícil la falla humana",ko:"사람의 실수를 불가능하거나 매우 어렵게 만들어 오류를 예방"},
+    {es:"Para medir dimensiones con precisión",ko:"치수를 정밀하게 측정"},
+    {es:"Para imprimir la fecha en las piezas",ko:"부품에 날짜를 각인"},
+    {es:"Para acelerar la máquina de inyección",ko:"사출기의 속도를 높임"}],
+ e:{es:"El Poka-Yoke asegura la calidad final al evitar que el error ocurra o que avance.",ko:"포카요케는 오류의 발생 또는 유출을 막아 최종 품질을 보증합니다."}},
+{c:"prev",s:15,q:{es:"¿Qué es la pieza Red Rabbit?",ko:"레드 래빗(Red Rabbit) 부품이란 무엇입니까?"},
+ o:[{es:"Una muestra intencionalmente no conforme para verificar que el Poka-Yoke detecta el error",ko:"포카요케가 오류를 검출하는지 확인하기 위한 의도적인 부적합 샘플"},
+    {es:"Una pieza master OK para verificar que no se rechacen piezas buenas",ko:"양품이 불량 처리되지 않는지 확인하는 마스터 양품"},
+    {es:"Una pieza de scrap que se puede reutilizar",ko:"재사용 가능한 스크랩 부품"},
+    {es:"La primera pieza del turno liberada por calidad",ko:"품질이 승인한 근무조 초품"}],
+ e:{es:"Red Rabbit = muestra NO conforme (el PKYK debe rechazarla). Green Rabbit = master OK (el PKYK debe aceptarla).",ko:"레드 래빗=부적합 샘플(검출되어야 함), 그린 래빗=마스터 양품(통과되어야 함)."}},
+{c:"prev",s:17,q:{es:"¿Para qué sirven los fechadores?",ko:"날짜 각인기는 무엇을 위해 사용합니까?"},
+ o:[{es:"Para imprimir la fecha y otra información y así controlar la trazabilidad de las piezas",ko:"날짜 및 기타 정보를 표시하여 부품 추적성을 관리"},
+    {es:"Para pintar las piezas que faltan de pintura",ko:"도장 누락 부품을 도장"},
+    {es:"Para cortar la rebaba de la pieza",ko:"부품의 버를 제거"},
+    {es:"Para contar las piezas por caja",ko:"박스당 부품 수량을 셈"}],
+ e:{es:"La trazabilidad permite saber cuándo se fabricó una pieza y delimitar una contención.",ko:"추적성으로 부품의 생산 시점을 알고 봉쇄 범위를 정할 수 있습니다."}},
+{c:"insp",s:20,q:{es:"¿En cuál de estas situaciones se requiere contención GP12?",ko:"다음 중 GP12 봉쇄가 필요한 상황은?"},
+ o:[{es:"En el arranque de un producto nuevo",ko:"신제품 양산 개시"},
+    {es:"Cuando el área está limpia y ordenada",ko:"구역이 깨끗하고 정돈되어 있을 때"},
+    {es:"Cuando cambia el turno sin problemas",ko:"문제없이 근무조가 교대될 때"},
+    {es:"Cuando se termina el inventario de cajas",ko:"박스 재고가 소진될 때"}],
+ e:{es:"GP12 aplica en arranque de producto nuevo, contención especial por reclamo, alto producto no conforme o sospechoso, o validación de un proveedor con mala calidad.",ko:"GP12: 신제품 개시, 클레임 특별 봉쇄, 부적합/의심품 다발, 품질 불량 협력사 검증."}},
+{c:"insp",s:22,q:{es:"¿Cuál de estos es un defecto común del área de Inyección?",ko:"다음 중 사출 공정의 대표적인 불량은?"},
+ o:[{es:"Ráfaga, porosidad, opacidad o deformación",ko:"실버 스트릭, 기공, 광택 불량, 변형"},
+    {es:"Secuencia errónea de componentes",ko:"부품 순서 오류"},
+    {es:"Mal soplado",ko:"블로우 불량"},
+    {es:"Falta de trabajo en caucho",ko:"고무 작업 누락"}],
+ e:{es:"Secuencia errónea = Ensamble; mal soplado = Autoblow; falta de trabajo = Rubber.",ko:"부품 순서 오류=조립, 블로우 불량=Autoblow, 작업 누락=Rubber."}},
+{c:"seg",s:24,q:{es:"Un compañero está realizando un trabajo inseguro. ¿Qué debes hacer?",ko:"동료가 불안전한 작업을 하고 있습니다. 어떻게 해야 합니까?"},
+ o:[{es:"Detener la operación, avisarle y reportar a Seguridad, al líder o al supervisor",ko:"작업을 중지하고 동료에게 알린 뒤 안전 부서, 리더 또는 감독자에게 보고"},
+    {es:"Seguir trabajando; no es mi responsabilidad",ko:"계속 작업한다; 내 책임이 아니다"},
+    {es:"Esperar al final del turno para comentarlo",ko:"근무 종료 후 이야기한다"},
+    {es:"Tomar una foto y subirla a redes sociales",ko:"사진을 찍어 SNS에 올린다"}],
+ e:{es:"Detener y avisar evita el accidente; Seguridad o el supervisor corrigen la condición y la mantienen bajo control.",ko:"중지하고 알리면 사고를 예방하며, 안전 부서나 감독자가 조치하여 통제합니다."}}
+];
+
+/* ---------- English (EN) ---------- */
+const QEN=[{"q": "HPM's quality mindset is based on three commitments. What are they?", "o": ["I receive, I produce, I deliver (with quality)", "I inspect, I report, I rest", "I buy, I sell, I collect", "I produce, the inspector checks, the customer decides"], "e": "Everyone is responsible for the quality of what they receive, what they produce and what they deliver to the next process."}, {"q": "In 5S, what does “Set in order” (Ordenar) mean?", "o": ["A place for everything: organize what is needed in a logical, accessible way", "Remove from the area everything that is not needed", "Eliminate dust, dirt and sources of contamination", "Evaluate, correct and improve continuously"], "e": "Sort = remove what is not needed; Set in order = a place for everything; Shine = remove dirt; Standardize = rules; Sustain = habit."}, {"q": "What is an NCR?", "o": ["A nonconformity reported by customers, or a claim from HPM to its suppliers", "A new reference code for the part number", "An internal plant problem that stays in the area", "The part specification established in the drawing"], "e": "An internal plant problem is an ISSUE; the drawing specification is the SPEC."}, {"q": "A critical characteristic (CC) is related to…", "o": ["The safety, function or assembly of the part", "Only color and appearance", "Cost and selling price", "The number of parts per box"], "e": "CC = critical characteristic. An error in it can affect safety, function or assembly at the customer."}, {"q": "A Go / No Go gage only shows whether the part passes or fails. What type is it?", "o": ["Attribute: the characteristic is conforming or nonconforming", "Variable: it gives an actual measurement in units", "A height measuring instrument", "A Poka-Yoke device"], "e": "Variables = actual measurement expressed in a unit (caliper, height gage). Attributes = conforming / nonconforming."}, {"q": "According to the Escalation Plan, when 5 nonconformities accumulate in inspection, who is it escalated to?", "o": ["The Production / Quality supervisor", "Only the operators in the area", "The plant manager", "It is not escalated until it reaches 10"], "e": "3 NC → operators/inspectors; 5 NC → supervisor; 7 NC → operations/quality manager; 10 NC → plant manager. An accident is escalated immediately."}, {"q": "What is the RED tag used for?", "o": ["To identify SCRAP (nonconforming material)", "To identify suspect product", "To release previously rejected product", "To identify material in transit to the customer"], "e": "Red = scrap / nonconforming; Yellow = suspect; Green = released."}, {"q": "You find parts whose condition is not yet confirmed. Which tag do you put on them?", "o": ["Yellow: suspect material", "Red: scrap", "Green: OK material", "None, they stay on the line"], "e": "Suspect product is identified with a yellow tag and held until it is validated."}, {"q": "What does the GREEN “Material OK” tag indicate?", "o": ["The release of product that was previously rejected", "That the material goes straight to scrap", "That the material is waiting for evaluation", "That the part is a Red Rabbit"], "e": "The green tag records that held material has been evaluated and released."}, {"q": "On the Suspect Product Tag (Etiqueta de Producto Sospechoso), who is recorded as responsible?", "o": ["One person from Process and one from Quality, with full name", "Only the customer", "The plant manager, with signature only", "No one is recorded as responsible"], "e": "The tag asks for model, product name, reason, quantity of parts, Process and Quality responsibles, and the date the material was identified."}, {"q": "If material is in the Quarantine Area, it means that…", "o": ["It is held until there is an authorized decision", "It is automatically scrap", "It is already released for shipping", "It can be used if the line is in a hurry"], "e": "Quarantine does not mean scrap: the material is waiting for evaluation and an authorized decision."}, {"q": "How must the Quarantine Area be kept?", "o": ["Always locked, with material correctly identified", "Open so anyone can take material when needed", "Locked, even if the material has no tag", "Next to good product to save space"], "e": "Its purpose is to prevent suspect or nonconforming material from mixing with good product or moving forward by mistake."}, {"q": "What happens if we ship nonconforming parts to the customer?", "o": ["Customer complaint and penalty, quality alert, containment at HPM and at the customer, and line-stop costs", "Nothing, the customer sorts them at no cost", "The parts are just replaced in the next shipment", "The customer pays us a bonus for finding them"], "e": "The cost of an escape includes penalties, containment at two plants and the customer's line stop."}, {"q": "When is a process deviation EXTERNAL?", "o": ["When it involves a critical characteristic (safety, function or assembly) and requires customer approval", "When it is controlled internally without notifying the customer", "When the product does meet the specification", "When the operator decides it during the shift"], "e": "Internal: controlled within HPM without notifying the customer (but departments must be informed). External: requires customer approval."}, {"q": "What is a Poka-Yoke for?", "o": ["To prevent errors by making human mistakes impossible or very difficult", "To measure dimensions precisely", "To print the date on parts", "To speed up the injection machine"], "e": "A Poka-Yoke ensures final quality by preventing the error from happening or moving forward."}, {"q": "What is the Red Rabbit part?", "o": ["An intentionally nonconforming sample used to verify that the Poka-Yoke detects the error", "An OK master part used to verify that good parts are not rejected", "A scrap part that can be reused", "The first piece of the shift released by Quality"], "e": "Red Rabbit = NONconforming sample (the PKYK must reject it). Green Rabbit = OK master (the PKYK must accept it)."}, {"q": "What are date stampers (fechadores) for?", "o": ["To print the date and other information to control part traceability", "To paint parts with missing paint", "To trim flash from the part", "To count the parts per box"], "e": "Traceability tells us when a part was made and lets us define the scope of a containment."}, {"q": "In which of these situations is GP12 containment required?", "o": ["At the launch of a new product", "When the area is clean and organized", "When the shift changes without problems", "When the box inventory runs out"], "e": "GP12 applies at new product launch, special containment due to a complaint, high nonconforming or suspect product, or validating a supplier with poor quality."}, {"q": "Which of these is a common defect in the Injection area?", "o": ["Splay, porosity, haze or warpage", "Wrong component sequence", "Poor blowing", "Missing work on rubber"], "e": "Wrong sequence = Assembly; poor blowing = Autoblow; missing work = Rubber."}, {"q": "A coworker is doing unsafe work. What should you do?", "o": ["Stop the operation, warn them and report to Safety, the leader or the supervisor", "Keep working; it's not my responsibility", "Wait until the end of the shift to mention it", "Take a photo and post it on social media"], "e": "Stopping and warning prevents the accident; Safety or the supervisor corrects the condition and keeps it under control."}];
+Q.forEach((x,i)=>{const t=QEN[i];x.q.en=t.q;x.e.en=t.e;x.o.forEach((o,j)=>o.en=t.o[j])});
+
+Object.assign(UI.es,{printCertificate:"Imprimir Certificado",certTitle:"Certificado de evaluación",certCourse:"Básicos de la Calidad · Hyundai Polytech México",certDescription:"Se hace constar que el participante completó el examen con el resultado indicado.",pdfHelp:"Para guardarlo en tu equipo, haz clic en Imprimir Certificado y selecciona Guardar como PDF en la ventana de impresión."});
+Object.assign(UI.en,{printCertificate:"Print Certificate",certTitle:"Assessment certificate",certCourse:"Quality Basics · Hyundai Polytech México",certDescription:"This certifies that the participant completed the examination with the result shown.",pdfHelp:"To save it locally, click Print Certificate and select Save as PDF in the print dialog."});
+Object.assign(UI.ko,{printCertificate:"평가 증명서 인쇄",certTitle:"평가 증명서",certCourse:"품질 기본 · Hyundai Polytech México",certDescription:"응시자는 아래 결과로 시험을 완료하였습니다.",pdfHelp:"컴퓨터에 저장하려면 평가 증명서 인쇄를 클릭하고 인쇄 창에서 PDF로 저장을 선택하세요."});
+
+/* ---------- Estado ---------- */
+const LS_KEY="hpm_exam_basicos_calidad_r02";
+let lang="es",S=null,revMode="all",modalCb=null,shift="";
+const $=id=>document.getElementById(id);
+const t=k=>UI[lang][k];
+const L=o=>o[lang];
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function show(id){["screen-start","screen-exam","screen-result","screen-history"].forEach(s=>$(s).hidden=s!==id);window.scrollTo(0,0)}
+function current(){return ["screen-start","screen-exam","screen-result","screen-history"].find(s=>!$(s).hidden)}
+
+/* ---------- Idioma ---------- */
+function applyLang(){
+  document.documentElement.lang=lang;
+  document.querySelectorAll("[data-i]").forEach(el=>{const v=t(el.dataset.i);if(typeof v==="string")el.textContent=v});
+  document.querySelectorAll(".lang button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lang===lang));
+  const a=$("fArea"),sel=a.value;
+  a.innerHTML=`<option value="">${t("selArea")}</option>`+AREAS.map(x=>`<option value="${x[0]}">${x[LI[lang]]}</option>`).join("");
+  a.value=sel;
+  const cnt={};Q.forEach(q=>cnt[q.c]=(cnt[q.c]||0)+1);
+  $("topicPills").innerHTML=Object.keys(CATS).map(k=>`<span class="pill${k==="pnc"?" nc":""}">${L(CATS[k])} · ${cnt[k]}</span>`).join("");
+  const c=current();
+  if(c==="screen-exam")renderQ();
+  if(c==="screen-result")renderResult();
+  if(c==="screen-history")renderHistory();
+}
+document.querySelectorAll(".lang button").forEach(b=>b.onclick=()=>{lang=b.dataset.lang;applyLang()});
+
+/* ---------- Registro ---------- */
+document.querySelectorAll("#fShift button").forEach(b=>b.onclick=()=>{shift=b.dataset.v;document.querySelectorAll("#fShift button").forEach(x=>x.setAttribute("aria-pressed",x===b))});
+$("btnStart").onclick=()=>{
+  const name=$("fName").value.trim(),emp=$("fEmp").value.trim(),area=$("fArea").value;
+  const e=!name?"errName":!emp?"errEmp":!area?"errArea":!shift?"errShift":"";
+  $("regErr").textContent=e?t(e):"";
+  if(e)return;
+  S={name,emp,area,shift,inst:$("fInst").value.trim(),start:Date.now(),i:0,
+     items:shuffle(Q.map((q,qi)=>qi)).map(qi=>({qi,order:shuffle([0,1,2,3]),ans:null}))};
+  show("screen-exam");renderQ();
+};
+
+/* ---------- Examen ---------- */
+function renderQ(){
+  const it=S.items[S.i],q=Q[it.qi];
+  $("whoLine").innerHTML=`${esc(S.name)}<small>${esc(S.emp)} · ${esc(areaLabel(S.area))} · ${t("fShift")} ${esc(S.shift)}</small>`;
+  $("counter").textContent=`${t("q")} ${S.i+1} ${t("of")} 20`;
+  $("dots").innerHTML=S.items.map((x,k)=>`<button class="dot${x.ans!==null?" ans":""}${k===S.i?" cur":""}" data-k="${k}" aria-label="${t("q")} ${k+1}">${k+1}</button>`).join("");
+  $("dots").querySelectorAll(".dot").forEach(d=>d.onclick=()=>{S.i=+d.dataset.k;renderQ()});
+  $("qmeta").innerHTML=`<span class="pill${q.c==="pnc"?" nc":""}">${L(CATS[q.c])}</span><span class="ref">${t("slide")} ${q.s}</span>`;
+  $("qtext").textContent=L(q.q);
+  $("opts").innerHTML=it.order.map((oi,k)=>`<button class="opt" role="radio" aria-checked="${it.ans===oi}" data-oi="${oi}"><span class="lt">${"ABCD"[k]}</span><span>${esc(L(q.o[oi]))}</span></button>`).join("");
+  $("opts").querySelectorAll(".opt").forEach(b=>b.onclick=()=>{it.ans=+b.dataset.oi;renderQ()});
+  $("btnPrev").disabled=S.i===0;
+  const last=S.i===19;
+  $("btnNext").textContent=last?t("finish"):t("next");
+}
+function areaLabel(v){const a=AREAS.find(x=>x[0]===v);return a?a[LI[lang]]:v}
+$("btnPrev").onclick=()=>{if(S.i>0){S.i--;renderQ()}};
+$("btnNext").onclick=()=>{
+  if(S.i<19){S.i++;renderQ();return}
+  const un=S.items.filter(x=>x.ans===null).length;
+  if(un)openModal(t("mUnTitle"),t("mUnText")(un),t("mUnOk"),t("mUnCancel"),finish);
+  else openModal(t("mFinTitle"),t("mFinText"),t("mFinOk"),t("mFinCancel"),finish);
+};
+document.addEventListener("keydown",e=>{
+  if($("screen-exam").hidden||!$("modal").hidden||/INPUT|SELECT/.test(document.activeElement.tagName))return;
+  const k=e.key.toUpperCase();
+  if("ABCD".includes(k)&&k.length===1){const it=S.items[S.i];it.ans=it.order["ABCD".indexOf(k)];renderQ()}
+  else if(e.key==="ArrowRight"&&S.i<19){S.i++;renderQ()}
+  else if(e.key==="ArrowLeft"&&S.i>0){S.i--;renderQ()}
+});
+
+function finish(){
+  S.end=Date.now();
+  S.score=S.items.filter(x=>x.ans===0).length;
+  S.passed=S.score>=16;
+  S.done=true;
+  saveHistory();
+  revMode="all";
+  show("screen-result");renderResult();
+}
+
+/* ---------- Resultados ---------- */
+function fmtDate(ms){const d=new Date(ms);const p=n=>String(n).padStart(2,"0");return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`}
+function renderResult(){
+  const pct=Math.round(S.score/20*100);
+  $("rScore").textContent=`${S.score}/20`;
+  $("rPct").textContent=`${pct}% ${t("correct")}`;
+  const arc=$("ringArc");arc.setAttribute("stroke",S.passed?"#42C6FF":"#FF6B7D");
+  requestAnimationFrame(()=>{arc.style.transition="stroke-dashoffset .9s ease";arc.setAttribute("stroke-dashoffset",(326.7*(1-pct/100)).toFixed(1))});
+  const v=$("rVerdict");v.textContent=S.passed?t("pass"):t("fail");v.className="verdict "+(S.passed?"ok":"bad");
+  $("rName").textContent=S.name;
+  setSync(syncState);
+  const mins=Math.max(1,Math.round((S.end-S.start)/60000));
+  $("rKv").innerHTML=[["kEmp",S.emp],["kArea",areaLabel(S.area)],["kShift",S.shift],["kInst",S.inst||"—"],["kDate",fmtDate(S.end)],["kTime",`${mins} ${t("min")}`]]
+    .map(([k,v])=>`<div><span>${t(k)}</span><b>${esc(v)}</b></div>`).join("");
+  $("cats").innerHTML=Object.keys(CATS).map(k=>{
+    const its=S.items.filter(x=>Q[x.qi].c===k),ok=its.filter(x=>x.ans===0).length,p=Math.round(ok/its.length*100);
+    return `<div class="cat"><span>${L(CATS[k])}</span><div class="bar"><i class="${p<80?"low":""}" style="width:${p}%"></i></div><span class="pc">${ok}/${its.length}</span></div>`}).join("");
+  document.querySelectorAll("#revFilter button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===revMode));
+  $("revList").innerHTML=S.items.map((x,k)=>{
+    const q=Q[x.qi],ok=x.ans===0;
+    const hide=revMode==="bad"&&ok?" data-hide hidden":"";
+    const yours=x.ans===null?t("noAns"):L(q.o[x.ans]);
+    return `<div class="rev"${hide}>
+      <div class="qmeta" style="margin:0"><span class="mark ${ok?"ok":"bad"}">${k+1} · ${ok?t("ok"):t("bad")}</span><span class="ref">${L(CATS[q.c])} · ${t("slide")} ${q.s}</span></div>
+      <div class="rq">${esc(L(q.q))}</div>
+      ${ok?`<div class="ans-line ok">${t("yourAns")}: ${esc(yours)}</div>`
+          :`<div class="ans-line bad">${t("yourAns")}: ${esc(yours)}</div><div class="ans-line ok">${t("rightAns")}: ${esc(L(q.o[0]))}</div>`}
+      <div class="exp">${esc(L(q.e))}</div></div>`}).join("");
+}
+document.querySelectorAll("#revFilter button").forEach(b=>b.onclick=()=>{revMode=b.dataset.v;renderResult()});
+let printTitle=null;
+function restorePrint(){document.body.classList.remove("certificate-print");if(printTitle!==null){document.title=printTitle;printTitle=null}}
+window.addEventListener("afterprint",restorePrint);
+$("btnCertificate").onclick=()=>{
+  if(!S||!S.done)return;
+  restorePrint();
+  printTitle=document.title;
+  document.title=`Certificado_Basicos_Calidad_${S.emp.replace(/[^a-zA-Z0-9_-]/g,"_")}_${fmtDate(S.end).slice(0,10)}`;
+  document.body.classList.add("certificate-print");
+  try{window.print()}catch(e){restorePrint();throw e}
+};
+$("btnPrint").onclick=()=>{restorePrint();window.print()};
+$("btnNew").onclick=()=>resetToStart();
+function resetToStart(){syncState="";S=null;shift="";["fName","fEmp","fInst"].forEach(i=>$(i).value="");$("fArea").value="";
+  document.querySelectorAll("#fShift button").forEach(x=>x.setAttribute("aria-pressed","false"));$("regErr").textContent="";show("screen-start")}
+
+/* ---------- Envío al sistema de Calidad (index.html) ----------
+   Cada examen terminado se agrega a la bandeja kv/exam:basicos-inbox.
+   index.html la lee, empata por No. de empleado y lo registra en el
+   expediente (curso "Básicos de Calidad HPM"). Si no hay red, el
+   resultado espera en este equipo y se reintenta solo. */
+const PENDING_KEY="hpm_exam_basicos_pending";
+let syncState="";
+function loadPending(){try{return JSON.parse(localStorage.getItem(PENDING_KEY)||"[]")}catch(e){return []}}
+function savePending(a){try{localStorage.setItem(PENDING_KEY,JSON.stringify(a))}catch(e){}}
+function setSync(st){syncState=st;const el=$("rSync");if(!el)return;
+  el.className="sync-line "+(st==="ok"?"ok":st==="fail"?"warn":"");
+  el.textContent=st?t(st==="ok"?"syncOk":st==="fail"?"syncFail":"syncWait"):""}
+async function flushPending(){
+  const items=loadPending();if(!items.length)return true;
+  const fb=window.__fbExam;if(!fb){setSync("fail");return false}
+  try{
+    await fb.setDoc(fb.doc(fb.db,"kv","exam:basicos-inbox"),{items:fb.arrayUnion(...items),updatedAt:Date.now()},{merge:true});
+    const sent=new Set(items.map(x=>x.id));
+    savePending(loadPending().filter(x=>!sent.has(x.id)));
+    return true;
+  }catch(e){console.error("Envío de resultado falló",e);return false}
+}
+async function queueResult(r){
+  const p=loadPending();p.push(r);savePending(p);
+  setSync("wait");
+  setSync(await flushPending()?"ok":"fail");
+}
+window.addEventListener("fbexam-ready",()=>flushPending());
+window.addEventListener("online",()=>flushPending().then(ok=>{if(ok&&syncState==="fail")setSync("ok")}));
+
+/* ---------- Historial local ---------- */
+function loadHistory(){try{return JSON.parse(localStorage.getItem(LS_KEY)||"[]")}catch(e){return []}}
+function saveHistory(){
+  try{const h=loadHistory();
+    h.unshift({date:fmtDate(S.end),name:S.name,emp:S.emp,area:S.area,shift:S.shift,inst:S.inst,score:S.score,pct:Math.round(S.score/20*100),passed:S.passed,
+      mins:Math.max(1,Math.round((S.end-S.start)/60000)),wrong:S.items.filter(x=>x.ans!==0).map(x=>Q[x.qi].s).join(" ")});
+    localStorage.setItem(LS_KEY,JSON.stringify(h.slice(0,2000)))}catch(e){}
+  const d=new Date(S.end),p=n=>String(n).padStart(2,"0");
+  queueResult({id:`${S.end}-${String(S.emp).replace(/[^a-zA-Z0-9]/g,"")}`,examen:"basicos",
+    fecha:`${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`,hora:`${p(d.getHours())}:${p(d.getMinutes())}`,
+    name:S.name,emp:S.emp,area:S.area,shift:S.shift,inst:S.inst||"",score:S.score,total:20,
+    pct:Math.round(S.score/20*100),passed:S.passed,mins:Math.max(1,Math.round((S.end-S.start)/60000)),
+    wrong:S.items.filter(x=>x.ans!==0).map(x=>Q[x.qi].s).join(" ")});
+}
+function renderHistory(){
+  const h=loadHistory();
+  if(!h.length){$("histTbl").innerHTML=`<div class="empty">${t("histEmpty")}</div>`;return}
+  $("histTbl").innerHTML=`<table><thead><tr><th>${t("hDate")}</th><th>${t("hName")}</th><th>${t("hEmp")}</th><th>${t("hArea")}</th><th>${t("hShift")}</th><th>${t("hScore")}</th><th>${t("hRes")}</th></tr></thead><tbody>`+
+    h.map(r=>`<tr><td>${esc(r.date)}</td><td>${esc(r.name)}</td><td>${esc(r.emp)}</td><td>${esc(areaLabel(r.area))}</td><td>${esc(r.shift)}</td><td style="font-family:var(--mono)">${r.score}/20 (${r.pct}%)</td><td><span class="mark ${r.passed?"ok":"bad"}">${r.passed?t("pass"):t("fail")}</span></td></tr>`).join("")+`</tbody></table>`;
+}
+$("btnHistory").onclick=()=>{
+  if(current()==="screen-exam"&&S&&!S.done){openModal(t("mNewTitle"),t("mNewText"),t("mNewOk"),t("mNewCancel"),()=>{S=null;show("screen-history");renderHistory()});return}
+  show("screen-history");renderHistory()};
+$("btnBack").onclick=()=>{if(S&&S.done){show("screen-result");renderResult()}else resetToStart()};
+$("btnClear").onclick=()=>openModal(t("mClrTitle"),t("mClrText"),t("mClrOk"),t("mClrCancel"),()=>{try{localStorage.removeItem(LS_KEY)}catch(e){}renderHistory()});
+$("btnCsv").onclick=()=>{
+  const h=loadHistory();if(!h.length)return;
+  const head=["Fecha","Nombre","No. empleado","Área","Turno","Instructor","Aciertos","Porcentaje","Resultado","Duración (min)","Láminas a reforzar"];
+  const rows=h.map(r=>[r.date,r.name,r.emp,r.area,r.shift,r.inst,r.score,r.pct,r.passed?"APROBADO":"NO APROBADO",r.mins,r.wrong]);
+  const csv="\ufeff"+[head,...rows].map(r=>r.map(c=>`"${String(c??"").replace(/"/g,'""')}"`).join(",")).join("\r\n");
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
+  a.download=`Examen_Basicos_Calidad_R02_${new Date().toISOString().slice(0,10)}.csv`;document.body.appendChild(a);a.click();a.remove();
+};
+
+/* ---------- Diálogo ---------- */
+function openModal(title,text,okTxt,cancelTxt,cb){$("mTitle").textContent=title;$("mText").textContent=text;$("mOk").textContent=okTxt;$("mCancel").textContent=cancelTxt;modalCb=cb;$("modal").hidden=false;$("mCancel").focus()}
+$("mCancel").onclick=()=>{$("modal").hidden=true};
+$("mOk").onclick=()=>{$("modal").hidden=true;if(modalCb)modalCb()};
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("modal").hidden)$("modal").hidden=true});
+window.addEventListener("beforeunload",e=>{if(S&&!S.done){e.preventDefault();e.returnValue=""}});
+
+applyLang();
+</script>
+</body>
+</html>
