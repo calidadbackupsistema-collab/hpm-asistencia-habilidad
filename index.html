@@ -218,6 +218,7 @@
   .savestate{font-size:12px;color:var(--ink-faint);font-weight:500;min-width:90px;text-align:right;}
   .savestate.saving{color:var(--retardo);}
   .savestate.saved{color:var(--presente);}
+  .savestate.error{color:var(--falta-i);font-weight:700;}
 
   /* ---------- KPI row ---------- */
   .group-banner{
@@ -1874,20 +1875,84 @@ async function loadDayRecords(dateStr){
   return raw ? JSON.parse(raw) : {};
 }
 async function saveDayRecords(dateStr, records){
-  await storageSet('attendance:'+dateStr, JSON.stringify(records), true);
-  await addDateToIndex(dateStr);
+  const ok = await storageSet('attendance:'+dateStr, JSON.stringify(records), true);
+  if(ok) await addDateToIndex(dateStr);
+  return !!ok;
+}
+/* Lectura estricta: si Firebase no responde lanza error (no devuelve {} como loadDayRecords),
+   para nunca confundir "no pude leer" con "el día está vacío". */
+async function loadDayRecordsStrict(dateStr){
+  if(!window.__fb) throw new Error('Firebase no está inicializado.');
+  const { db, doc, getDoc } = window.__fb;
+  const snap = await getDoc(doc(db, 'kv', 'attendance:'+dateStr));
+  if(!snap.exists()) return {};
+  return JSON.parse(snap.data().value) || {};
 }
 
+/* ---- Guardado de asistencia con fusión (R: guardado seguro multiusuario) ----
+   Cada sesión guarda SOLO las personas que tocó: antes de escribir vuelve a leer
+   el día en Firebase y fusiona, así dos usuarios capturando el mismo día ya no
+   se borran entre sí. El trabajo pendiente recuerda su fecha y su objeto de
+   registros, por lo que cambiar de día no puede mezclar fechas. */
+let pendingDay = null;            // {date, recs, ids:Set} cambios aún no enviados
+let retryJobs = [];               // trabajos que fallaron y se reintentan
+let saveChain = Promise.resolve();// los guardados se ejecutan uno tras otro
+function saveMsg(k){
+  const M = {
+    saving:{es:'Guardando...', en:'Saving...', ko:'저장 중...'},
+    saved:{es:'Guardado ✓', en:'Saved ✓', ko:'저장됨 ✓'},
+    error:{es:'⚠ No se guardó — reintentando', en:'⚠ Not saved — retrying', ko:'⚠ 저장 실패 — 재시도 중'}
+  }[k];
+  return M[currentLang] || M.es;
+}
+function touchDay(empId){
+  if(!pendingDay || pendingDay.date!==currentDate || pendingDay.recs!==currentDayRecords){
+    if(pendingDay && pendingDay.ids.size) retryJobs.push(pendingDay);
+    pendingDay = {date: currentDate, recs: currentDayRecords, ids: new Set()};
+  }
+  pendingDay.ids.add(empId);
+}
+function hasUnsavedAttendance(){ return !!(pendingDay && pendingDay.ids.size) || retryJobs.length>0; }
+async function flushDaySave(){
+  const el = document.getElementById('saveState');
+  const jobs = retryJobs; retryJobs = [];
+  if(pendingDay && pendingDay.ids.size){ jobs.push(pendingDay); pendingDay = null; }
+  let allOk = true;
+  for(const job of jobs){
+    try{
+      const remote = await loadDayRecordsStrict(job.date);
+      job.ids.forEach(id=>{ if(job.recs[id]) remote[id] = job.recs[id]; });
+      if(!(await saveDayRecords(job.date, remote))) throw new Error('storageSet falló');
+      // Si seguimos viendo ese día, traemos a pantalla lo que capturaron otros usuarios
+      if(currentDayRecords===job.recs){
+        const mine = pendingDay && pendingDay.recs===job.recs ? pendingDay.ids : new Set();
+        for(const id in remote){
+          if(job.ids.has(id) || mine.has(id)) continue;
+          if(JSON.stringify(remote[id])!==JSON.stringify(job.recs[id])){ job.recs[id] = remote[id]; refreshEmpRow(id); }
+        }
+      }
+    }catch(e){
+      console.error('No se pudo guardar la asistencia de', job.date, e);
+      allOk = false; retryJobs.push(job);
+    }
+  }
+  if(allOk){
+    if(!hasUnsavedAttendance()){ el.textContent = saveMsg('saved'); el.className='savestate saved'; }
+    renderKpis();
+  }else{
+    el.textContent = saveMsg('error'); el.className='savestate error';
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(()=>{ saveChain = saveChain.then(flushDaySave); }, 5000);
+  }
+  return allOk;
+}
 function queueSave(){
   const el = document.getElementById('saveState');
-  el.textContent = 'Guardando...'; el.className='savestate saving';
+  el.textContent = saveMsg('saving'); el.className='savestate saving';
   clearTimeout(saveTimer);
-  saveTimer = setTimeout(async ()=>{
-    await saveDayRecords(currentDate, currentDayRecords);
-    el.textContent = 'Guardado ✓'; el.className='savestate saved';
-    renderKpis();
-  }, 500);
+  saveTimer = setTimeout(()=>{ saveChain = saveChain.then(flushDaySave); }, 500);
 }
+window.addEventListener('beforeunload', ev=>{ if(hasUnsavedAttendance()){ ev.preventDefault(); ev.returnValue=''; } });
 
 /* ============================================================
    ASISTENCIA DIARIA VIEW
@@ -2048,6 +2113,7 @@ function setStatus(empId, statusKey){
   if(guardReadOnly()) return;
   const prev = currentDayRecords[empId] || {};
   currentDayRecords[empId] = {status:statusKey, cause: CAUSE_REQUIRED.includes(statusKey) ? (prev.cause||'') : '', updatedAt: Date.now()};
+  touchDay(empId);
   refreshEmpRow(empId);
   queueSave();
 }
@@ -2073,6 +2139,7 @@ function setCause(empId, text){
   if(!currentDayRecords[empId]) currentDayRecords[empId] = {status:null, cause:''};
   currentDayRecords[empId].cause = text;
   currentDayRecords[empId].updatedAt = Date.now();
+  touchDay(empId);
   queueSave();
 }
 
@@ -2355,7 +2422,7 @@ async function exportCsv(){
     const line = [r.date, r.emp.name, r.emp.empNum||'', areaLabel(r.emp.area), r.emp.group, statusLabel(r.status), (r.cause||'').replace(/,/g,';')];
     lines.push(line.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(','));
   });
-  const blob = new Blob([lines.join('\n')], {type:'text/csv;charset=utf-8;'});
+  const blob = new Blob(['\ufeff' + lines.join('\r\n')], {type:'text/csv;charset=utf-8;'}); // BOM: Excel respeta acentos y ñ
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url; a.download = `asistencia_${from}_a_${to}.csv`;
@@ -5694,7 +5761,14 @@ async function startApp(){
   document.getElementById('filterArea').addEventListener('change', ()=>{ drawAreaBlocks(); updateTitles(); renderKpis(); });
   document.getElementById('markAllPresent').addEventListener('click', ()=>{
     if(guardReadOnly()) return;
-    attendanceRoster().forEach(e=>{ currentDayRecords[e.id] = {status:'presente', cause:'', updatedAt: Date.now()}; });
+    /* Solo el personal visible con los filtros actuales (Grupo / Área) y que aún no tiene
+       estatus: ya no pisa faltas, incapacidades ni al otro grupo. */
+    const turnoFilter = document.getElementById('filterTurno').value;
+    const areaFilter = document.getElementById('filterArea').value;
+    const targets = attendanceRoster().filter(e=>
+      (!turnoFilter || e.group===turnoFilter) && areaMatch(e,areaFilter) && !currentDayRecords[e.id]?.status);
+    if(!targets.length) return;
+    targets.forEach(e=>{ currentDayRecords[e.id] = {status:'presente', cause:(currentDayRecords[e.id]?.cause)||'', updatedAt: Date.now()}; touchDay(e.id); });
     drawAreaBlocks(); renderKpis(); queueSave();
   });
   document.getElementById('printAttReportBtn').addEventListener('click', printAttendanceReport);
